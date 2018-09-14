@@ -1580,6 +1580,9 @@ static int bpf_prog_attach(const union bpf_attr *attr)
 	case BPF_SK_SKB_STREAM_PARSER:
 	case BPF_SK_SKB_STREAM_VERDICT:
 		return sockmap_get_from_fd(attr, true);
+	case BPF_FLOW_DISSECTOR:
+		ptype = BPF_PROG_TYPE_FLOW_DISSECTOR;
+		break;
 	default:
 #ifdef CONFIG_ANDROID_SPOOF_KERNEL_VERSION_FOR_BPF
 		pr_err("Pretending to support BPF attach_type = %d", attr->attach_type);
@@ -1657,6 +1660,8 @@ static int bpf_prog_detach(const union bpf_attr *attr)
 	case BPF_SK_SKB_STREAM_PARSER:
 	case BPF_SK_SKB_STREAM_VERDICT:
 		return sockmap_get_from_fd(attr, false);
+	case BPF_FLOW_DISSECTOR:
+		return skb_flow_dissector_bpf_prog_detach(attr);
 	default:
 #ifdef CONFIG_ANDROID_SPOOF_KERNEL_VERSION_FOR_BPF
 		pr_err("Pretending to support detach for BPF attach_type = %d", attr->attach_type);
