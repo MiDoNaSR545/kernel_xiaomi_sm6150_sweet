@@ -17,6 +17,7 @@ source "drivers/input/touchscreen/gt9896/Kconfig"
 source "drivers/input/touchscreen/ft8719_touch_f7b/Kconfig"
 source "drivers/input/touchscreen/nvt_touch_f7b/Kconfig"
 source "drivers/input/touchscreen/k6_focaltech_3658u/Kconfig"
+source "drivers/input/touchscreen/k6_focaltech_3658u/Kconfig"
 
 config TOUCHSCREEN_NVT_F7B
 	tristate "novatek touchscreens"
