@@ -500,6 +500,7 @@ struct usbpd {
 	int			uvdm_state;
 	bool			pps_weak_limit;
 
+	/* for MI smart inter-charge */
 	bool			enable_smart_interchg;
 	struct delayed_work	send_sink_soc_work;
 	struct delayed_work	swap_interchg_work;
