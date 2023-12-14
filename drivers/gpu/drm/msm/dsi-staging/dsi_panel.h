@@ -454,4 +454,9 @@ int dsi_panel_get_thermal_hbm_disabled(struct dsi_panel *panel,
 
 int dsi_panel_apply_hbm_mode(struct dsi_panel *panel);
 
+int dsi_panel_apply_dc_mode(struct dsi_panel *panel);
+
+int dsi_panel_db_ic_enable(struct dsi_panel *panel);
+
+int dsi_panel_mipi_reg_show(struct dsi_panel *panel);
 #endif /* _DSI_PANEL_H_ */
