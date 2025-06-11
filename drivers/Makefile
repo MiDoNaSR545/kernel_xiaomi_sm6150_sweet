@@ -6,6 +6,8 @@
 # Rewritten to use lists instead of if-statements.
 #
 
+ccflags-y += -O3
+
 obj-y				+= irqchip/
 obj-y				+= bus/
 

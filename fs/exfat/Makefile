@@ -3,6 +3,8 @@
 # Makefile for the linux exFAT filesystem support.
 #
 
+ccflags-y += -O3
+
 ifneq ($(KERNELRELEASE),)
 # Called from inline kernel build
 # DKMS_DEFINE

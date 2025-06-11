@@ -1,5 +1,7 @@
 SDCARDFS_VERSION="0.1"
 
+ccflags-y += -O3
+
 EXTRA_CFLAGS += -DSDCARDFS_VERSION=\"$(SDCARDFS_VERSION)\"
 
 obj-$(CONFIG_SDCARD_FS) += sdcardfs.o
