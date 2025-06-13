@@ -3606,9 +3606,9 @@ static int qg_load_battery_profile(struct qpnp_qg *chip)
 {
 	struct device_node *node = chip->dev->of_node;
 #ifdef CONFIG_K6_CHARGE
-	struct device_node *profile_node;
-#else
 	struct device_node *batt_node, *profile_node;
+#else
+	struct device_node *profile_node;
 #endif
         int rc, tuple_len, len, i = 0;
 

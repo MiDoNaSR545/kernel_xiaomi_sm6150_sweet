@@ -1138,7 +1138,7 @@ void cp_statemachine(unsigned int port)
 			}
 			break;
 		}
-
+#endif
 		if (pm_state.usb_type == POWER_SUPPLY_TYPE_USB_HVDCP_3 && tune_vbus_retry == FAKE_HVDCP3_DP_COUNT && pm_state.bq2597x.vbus_volt <= FAKE_HVDCP3_VBUS) {
 			cp_move_state(CP_STATE_SW_ENTRY);
 			cp_limit_sw(false);
@@ -1174,7 +1174,9 @@ void cp_statemachine(unsigned int port)
 				cp_move_state(CP_STATE_DISCONNECT);
 			}
 			cp_tune_vbus_volt(VOLT_UP);
-		} else {
+		} 
+#endif		
+		else {
 			reverse_count = 0;
 			pr_err("vbat volt is ok, enable flash charging\n");
 			if (!pm_state.bq2597x.charge_enabled) {

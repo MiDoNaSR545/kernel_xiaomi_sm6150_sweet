@@ -1210,6 +1210,7 @@ static int usbpd_pm_sm(struct usbpd_pm *pdpm)
 		break;
 
 	case PD_PM_STATE_FC2_ENTRY_2:
+#ifdef CONFIG_K6_CHARGE
 		pr_info("bus_err_st:%d, req_vol:%dmV, cur_vol:%d, req_curr:%d, vbat:%d, retry:%d\n",
 				pdpm->cp.bus_error_status, pdpm->request_voltage, pdpm->cp.vbus_volt, pdpm->request_current, pdpm->cp.vbat_volt, tune_vbus_retry);
 		if (pdpm->cp.bus_error_status == VBUS_ERROR_LOW ||
@@ -1516,17 +1517,6 @@ static void cp_psy_change_work(struct work_struct *work)
 {
 	struct usbpd_pm *pdpm = container_of(work, struct usbpd_pm,
 					cp_psy_change_work);
-
-	if (!pdpm->cp_psy)
-		return;
-
-	ret = power_supply_get_property(pdpm->cp_psy, POWER_SUPPLY_PROP_TI_VBUS_PRESENT, &val);
-	if (!ret)
-		pdpm->cp.vbus_pres = val.intval;
-
-	if (!ac_pres && pdpm->cp.vbus_pres)
-		schedule_delayed_work(&pdpm->pm_work, 0);
-#endif
 	pr_err("%s\n", __func__);
 	pdpm->psy_change_running = false;
 }
