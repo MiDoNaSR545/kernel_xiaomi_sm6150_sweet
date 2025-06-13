@@ -130,3 +130,8 @@ kernel/configs/android-*.cfg
 #Ignoring Android.bp link file
 #
 Android.bp
+out
+clang
+clang*
+gcc32
+gcc64

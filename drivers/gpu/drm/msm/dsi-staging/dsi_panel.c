@@ -69,11 +69,10 @@
 #define TICKS_IN_MICRO_SECOND		1000000
 #define to_dsi_display(x) container_of(x, struct dsi_display, host)
 static struct dsi_read_config g_dsi_read_cfg;
-static struct dsi_panel *g_panel;
 
 extern bool is_first_supply_panel;
 extern struct frame_stat fm_stat;
-struct dsi_panel *g_panel;
+static struct dsi_panel *g_panel;
 int panel_disp_param_send_lock(struct dsi_panel *panel, int param);
 int dsi_display_read_panel(struct dsi_panel *panel, struct dsi_read_config *read_config);
 #if DSI_READ_WRITE_PANEL_DEBUG
@@ -4233,55 +4232,6 @@ void dsi_panel_put(struct dsi_panel *panel)
 	kfree(panel);
 }
 
-#if DSI_READ_WRITE_PANEL_DEBUG
-static int dsi_display_write_panel(struct dsi_panel *panel,
-				struct dsi_panel_cmd_set *cmd_sets)
-{
-	int rc = 0, i = 0;
-	ssize_t len;
-	struct dsi_cmd_desc *cmds;
-	u32 count;
-	enum dsi_cmd_set_state state;
-	struct dsi_display_mode *mode;
-	const struct mipi_dsi_host_ops *ops = panel->host->ops;
-
-	if (!panel || !panel->cur_mode)
-		return -EINVAL;
-
-	mode = panel->cur_mode;
-
-	cmds = cmd_sets->cmds;
-	count = cmd_sets->count;
-	state = cmd_sets->state;
-
-	if (count == 0) {
-		pr_debug("[%s] No commands to be sent for state\n",
-			 panel->name);
-		goto error;
-	}
-
-	for (i = 0; i < count; i++) {
-		if (state == DSI_CMD_SET_STATE_LP)
-			cmds->msg.flags |= MIPI_DSI_MSG_USE_LPM;
-
-		if (cmds->last_command)
-			cmds->msg.flags |= MIPI_DSI_MSG_LASTCOMMAND;
-
-		len = ops->transfer(panel->host, &cmds->msg);//dsi_host_transfer,
-		if (len < 0) {
-			rc = len;
-			pr_err("failed to set cmds, rc=%d\n", rc);
-			goto error;
-		}
-		if (cmds->post_wait_ms)
-			usleep_range(cmds->post_wait_ms*1000,
-					((cmds->post_wait_ms*1000)+10));
-		cmds++;
-	}
-error:
-	return rc;
-}
-
 static ssize_t mipi_reg_procfs_write (struct file *file, const char __user *buf,
 	size_t count, loff_t *offp)
 {
@@ -4422,58 +4372,6 @@ const struct file_operations mipi_reg_proc_fops = {
 	.release = single_release,
 };
 #endif
-
-int dsi_panel_get_lockdowninfo_for_tp(unsigned char *plockdowninfo)
-{
-	int retval = 0, i = 0;
-	struct dsi_panel_cmd_set cmd_sets = {0};
-	while(g_panel && !g_panel->cur_mode) {
-		pr_debug("[%s][%s] cur_mode is null\n", __func__, g_panel->name);
-		msleep_interruptible(1000);
-	}
-	//don't read lockdown info by mipi bus when the screen is off
-	while(!g_panel->panel_initialized) {
-		msleep_interruptible(1000);
-	}
-
-	if(g_panel->cur_mode->priv_info->cmd_sets[DSI_CMD_SET_READ_LOCKDOWN_INFO].cmds) {
-		mutex_lock(&g_panel->panel_lock);
-
-		cmd_sets.cmds = g_panel->cur_mode->priv_info->cmd_sets[DSI_CMD_SET_READ_LOCKDOWN_INFO].cmds;
-		cmd_sets.count = 1;
-		cmd_sets.state = g_panel->cur_mode->priv_info->cmd_sets[DSI_CMD_SET_READ_LOCKDOWN_INFO].state;
-		retval = dsi_display_write_panel(g_panel, &cmd_sets);
-		if (retval) {
-			mutex_unlock(&g_panel->panel_lock);
-			pr_err("[%s][%s] failed to send cmds, rc=%d\n", __func__, g_panel->name, retval);
-			return EIO;
-		}
-		read_reg.enabled = 1;
-		read_reg.cmds_rlen = 8;
-		read_reg.read_cmd = cmd_sets;
-		read_reg.read_cmd.cmds = &cmd_sets.cmds[1];
-		retval = dsi_display_read_panel(g_panel, &read_reg);
-		if (retval <= 0) {
-			mutex_unlock(&g_panel->panel_lock);
-			pr_err("[%s][%s] failed to send cmds, rc=%d\n", __func__, g_panel->name, retval);
-			return EIO;
-		}
-		for(i = 0; i < 8; i++) {
-			pr_debug("[%s][%d]0x%x", __func__, __LINE__, read_reg.rbuf[i]);
-			plockdowninfo[i] = read_reg.rbuf[i];
-		}
-		if (!strcmp(g_panel->name,"xiaomi 37 02 0b video mode dsc dsi panel")) {
-			plockdowninfo[7] = 0x01;
-			pr_info("plockdowninfo[7] = 0x%x \n", plockdowninfo[7]);
-		}
-		mutex_unlock(&g_panel->panel_lock);
-		return retval;
-	}
-	else {
-		return EINVAL;
-	}
-}
-EXPORT_SYMBOL(dsi_panel_get_lockdowninfo_for_tp);
 
 #ifdef CONFIG_EXPOSURE_ADJUSTMENT
 static struct dsi_panel * set_panel;
