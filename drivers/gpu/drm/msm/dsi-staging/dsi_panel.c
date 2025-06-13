@@ -6270,9 +6270,9 @@ int dsi_panel_enable(struct dsi_panel *panel)
 		       panel->name, rc);
 	else
 		panel->panel_initialized = true;
+		mutex_unlock(&panel->panel_lock);
+
 	}
-		if (is_first_supply_panel)
-		mutex_lock(&panel->panel_lock);
 
 	if (count && (panel->cur_mode->timing.refresh_rate == 120)) {
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_DISP_BC_120HZ);
