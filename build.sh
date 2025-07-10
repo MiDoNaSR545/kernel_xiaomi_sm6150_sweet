@@ -2,10 +2,6 @@
 
 set -e
 
-# Install required packages
-sudo apt-get update
-sudo apt-get install -y bc cpio ccache gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu build-essential flex bison libelf-dev libssl-dev python3 lld curl git
-
 # Ask for AOSP or OEM
 read -p "Enter build type (aosp/oem): " buildtype
 buildtype_lower=$(echo "$buildtype" | tr '[:upper:]' '[:lower:]')
@@ -24,7 +20,7 @@ fi
 # Add KSU to prefix if selected
 if [[ "$ksu_lower" == "y" || "$ksu_lower" == "yes" ]]; then
     echo -e "\n🔧 Setting up KernelSU..."
-    curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-1.5.7
+    curl -LSs "https://raw.githubusercontent.com/SukiSU-Ultra/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-main
     zip_prefix="${zip_prefix}_KSU"
 fi
 
@@ -79,24 +75,3 @@ if [[ ! -f "$KERNEL_IMG" || ! -f "$DTBO_IMG" || ! -f "$DTB_IMG" ]]; then
     exit 1
 fi
 
-# Prepare AnyKernel3
-rm -rf AnyKernel3
-git clone https://github.com/MiDoNaSR545/AnyKernel3
-
-cp $KERNEL_IMG AnyKernel3
-cp $DTBO_IMG AnyKernel3
-cp $DTB_IMG AnyKernel3
-
-cd AnyKernel3
-zip -r9 "../$ZIPNAME" * -x .git README.md
-cd ..
-
-echo -e "\n✅ Kernel built and packed as: $ZIPNAME"
-
-# Upload the file using transfer.sh (25 MB+ limit)
-if command -v curl &> /dev/null; then
-    echo -e "\n📤 Uploading via transfer.sh..."
-    curl -u ":$PIXELDRAIN_API_KEY" -F "file=@$ZIPNAME" https://pixeldrain.com/api/file
-else
-    echo -e "\n⚠️ curl not installed or transfer.sh unavailable. File not uploaded."
-fi
