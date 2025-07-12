@@ -6,6 +6,7 @@ scripts/kconfig/conf  --silentoldconfig Kconfig
   CHK     include/generated/uapi/linux/version.h
   CHK     include/generated/utsrelease.h
   Using .. as source for kernel
+  CHK     scripts/mod/devicetable-offsets.h
 -- SukiSU-Ultra version (GitHub): 13230
 -- SukiSU-Ultra version (Github): v3.1.7-0b03cd9f@susfs-main
 -- SukiSU: Manual hooking enabled!
@@ -17,36 +18,12 @@ scripts/kconfig/conf  --silentoldconfig Kconfig
 -- Supported Unofficial Manager: 5ec1cff (GKI) rsuntk (Non-GKI) ShirkNeko udochina (GKI and non-GKI and KPM)
 
 -- SUSFS_VERSION: v1.5.9
-  CHK     scripts/mod/devicetable-offsets.h
   CHK     include/generated/timeconst.h
   CHK     include/generated/bounds.h
   CHK     include/generated/asm-offsets.h
   CALL    ../scripts/checksyscalls.sh
   CHK     include/generated/compile.h
-  CC      fs/stat.o
-  CC      fs/namei.o
-In file included from ../fs/stat.c:21:
-../include/linux/susfs_def.h:75:52: error: use of undeclared identifier 'TIF_NON_ROOT_USER_APP_PROC'
-   75 |         return test_ti_thread_flag(&current->thread_info, TIF_NON_ROOT_USER_APP_PROC);
-      |                                                           ^
-../include/linux/susfs_def.h:79:44: error: use of undeclared identifier 'TIF_NON_ROOT_USER_APP_PROC'
-   79 |         set_ti_thread_flag(&current->thread_info, TIF_NON_ROOT_USER_APP_PROC);
-      |                                                   ^
-2 errors generated.
-make[2]: *** [../scripts/Makefile.build:364: fs/stat.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
   DTC     arch/arm64/boot/dts/qcom/xiaomi-sdmmagpie.dtb
-In file included from ../fs/namei.c:43:
-../include/linux/susfs_def.h:75:52: error: use of undeclared identifier 'TIF_NON_ROOT_USER_APP_PROC'
-   75 |         return test_ti_thread_flag(&current->thread_info, TIF_NON_ROOT_USER_APP_PROC);
-      |                                                           ^
-../include/linux/susfs_def.h:79:44: error: use of undeclared identifier 'TIF_NON_ROOT_USER_APP_PROC'
-   79 |         set_ti_thread_flag(&current->thread_info, TIF_NON_ROOT_USER_APP_PROC);
-      |                                                   ^
-2 errors generated.
-make[2]: *** [../scripts/Makefile.build:364: fs/namei.o] Error 1
-make[1]: *** [/workspace/kernel_xiaomi_sm6150_sweet/Makefile:1278: fs] Error 2
-make[1]: *** Waiting for unfinished jobs....
   CHK     kernel/config_data.h
   DTC     arch/arm64/boot/dts/qcom/sweet-sdmmagpie-overlay.dtbo
 -- SukiSU-Ultra version (GitHub): 13230
@@ -60,19 +37,51 @@ make[1]: *** Waiting for unfinished jobs....
 -- Supported Unofficial Manager: 5ec1cff (GKI) rsuntk (Non-GKI) ShirkNeko udochina (GKI and non-GKI and KPM)
 
 -- SUSFS_VERSION: v1.5.9
-  CC      drivers/kernelsu/ksu.o
-In file included from ../drivers/kernelsu/ksu.c:15:
-In file included from ../include/linux/susfs.h:9:
-../include/linux/susfs_def.h:75:52: error: use of undeclared identifier 'TIF_NON_ROOT_USER_APP_PROC'
-   75 |         return test_ti_thread_flag(&current->thread_info, TIF_NON_ROOT_USER_APP_PROC);
-      |                                                           ^
-../include/linux/susfs_def.h:79:44: error: use of undeclared identifier 'TIF_NON_ROOT_USER_APP_PROC'
-   79 |         set_ti_thread_flag(&current->thread_info, TIF_NON_ROOT_USER_APP_PROC);
-      |                                                   ^
-2 errors generated.
-make[3]: *** [../scripts/Makefile.build:364: drivers/kernelsu/ksu.o] Error 1
-make[2]: *** [../scripts/Makefile.build:678: drivers/kernelsu] Error 2
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/workspace/kernel_xiaomi_sm6150_sweet/Makefile:1278: drivers] Error 2
+  DTBOIMG arch/arm64/boot/dtbo.img
+  DTC     arch/arm64/boot/dts/qcom/xiaomi-sdmmagpie.dtb
+  CAT     arch/arm64/boot/dtb.img
+  Building modules, stage 2.
+  LD [M]  drivers/mmc/core/mmc_test.lto.o
+  MODPOST 1 modules
+WARNING: vmlinux: 'bq2597x_enable_charge' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_wdt' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_wdt' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_batovp' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_batovp_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_batovp_alarm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_batovp_alarm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_batocp' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_batocp_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_batocp_alarm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_batocp_alarm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_busovp_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_busovp_alarm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_busovp_alarm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_busocp' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_busocp_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_busocp_alarm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_busocp_alarm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_batucp_alarm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_batucp_alarm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_acovp_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_bat_therm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_bat_therm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_bus_therm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_bus_therm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_die_therm' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_die_therm_th' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_enable_adc' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_adc_average' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_adc_scanrate' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_adc_bits' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_get_adc_data' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_alarm_int_mask' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_clear_alarm_int_mask' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_set_fault_int_mask' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_clear_fault_int_mask' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'sc8551_set_charge_mode' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'sc8551_get_charge_mode' exported twice. Previous export was in vmlinux
+WARNING: vmlinux: 'bq2597x_dump_reg' exported twice. Previous export was in vmlinux
+  CC      drivers/mmc/core/mmc_test.mod.o
+  LD [M]  drivers/mmc/core/mmc_test.ko
 make[1]: Leaving directory '/workspace/kernel_xiaomi_sm6150_sweet/out'
-make: *** [Makefile:153: sub-make] Error 2

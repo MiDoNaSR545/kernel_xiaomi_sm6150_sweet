@@ -75,3 +75,25 @@ if [[ ! -f "$KERNEL_IMG" || ! -f "$DTBO_IMG" || ! -f "$DTB_IMG" ]]; then
     exit 1
 fi
 
+
+# Prepare AnyKernel3
+rm -rf AnyKernel3
+git clone https://github.com/MiDoNaSR545/AnyKernel3
+
+cp $KERNEL_IMG AnyKernel3
+cp $DTBO_IMG AnyKernel3
+cp $DTB_IMG AnyKernel3
+
+cd AnyKernel3
+zip -r9 "../$ZIPNAME" * -x .git README.md
+cd ..
+
+echo -e "\n✅ Kernel built and packed as: $ZIPNAME"
+
+# Upload the file using transfer.sh (25 MB+ limit)
+if command -v curl &> /dev/null; then
+    echo -e "\n📤 Uploading via transfer.sh..."
+    curl -u ":$PIXELDRAIN_API_KEY" -F "file=@$ZIPNAME" https://pixeldrain.com/api/file
+else
+    echo -e "\n⚠️ curl not installed or transfer.sh unavailable. File not uploaded."
+fi
